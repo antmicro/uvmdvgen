@@ -1,0 +1,73 @@
+# Copyright lowRISC contributors (OpenTitan project).
+# Licensed under the Apache License, Version 2.0, see LICENSE for details.
+# SPDX-License-Identifier: Apache-2.0
+"""Generate SystemVerilog UVM agent extended freom our DV lib
+"""
+
+import os
+
+from mako import exceptions
+from mako.template import Template
+import importlib_resources
+import logging as log
+
+def gen_agent(name, has_separate_host_device_driver, root_dir, vendor,
+              license_header="", gen_core_file=True):
+    # set sub name
+    agent_dir = root_dir + "/" + name + "_agent"
+
+    # yapf: disable
+    # flake8: noqa
+    # 4-tuple - path, ip name, class name, file ext
+    agent_srcs = [(agent_dir,               name + '_', 'if',            '.sv'),
+                  (agent_dir,               name + '_', 'item',          '.sv'),
+                  (agent_dir,               name + '_', 'agent_cfg',     '.sv'),
+                  (agent_dir,               name + '_', 'agent_cov',     '.sv'),
+                  (agent_dir,               name + '_', 'monitor',       '.sv'),
+                  (agent_dir,               name + '_', 'driver',        '.sv'),
+                  (agent_dir,               name + '_', 'host_driver',   '.sv'),
+                  (agent_dir,               name + '_', 'device_driver', '.sv'),
+                  (agent_dir,               name + '_', 'agent_pkg',     '.sv'),
+                  (agent_dir,               name + '_', 'agent',         '.sv'),
+                  (agent_dir,               name + '_', 'agent',         '.core'),
+                  (agent_dir,               "",         'README',        '.md'),
+                  (agent_dir + "/seq_lib",  name + '_', 'seq_list',      '.sv'),
+                  (agent_dir + "/seq_lib",  name + '_', 'base_seq',      '.sv')]
+    # yapf: enable
+
+    for tup in agent_srcs:
+        path_dir = tup[0]
+        src_prefix = tup[1]
+        src = tup[2]
+        src_suffix = tup[3]
+
+        if has_separate_host_device_driver:
+            if src == "driver": continue
+        else:
+            if src == "host_driver": continue
+            if src == "device_driver": continue
+
+        ftpl = src + src_suffix + '.tpl'
+        fname = src_prefix + src + src_suffix
+
+        # read template
+        tpl = None
+
+        if not gen_core_file and src_suffix == ".core":
+            continue
+        elif gen_core_file and src_suffix == ".core":
+            tpl = Template(filename=str(importlib_resources.files('scripts').parent / "templates" / "fusesoc" / ftpl))
+        else:
+            tpl = Template(filename=str(importlib_resources.files('scripts').parent / "templates" / "agent" / ftpl))
+
+        if not os.path.exists(path_dir): os.system("mkdir -p " + path_dir)
+        with open(path_dir + "/" + fname, 'w') as fout:
+            try:
+                fout.write(
+                    tpl.render(name=name,
+                               has_separate_host_device_driver=
+                               has_separate_host_device_driver,
+                               vendor=vendor,
+                               license_header=license_header))
+            except:
+                log.error(exceptions.text_error_template().render())

@@ -1,0 +1,25 @@
+module(
+    name = "uvmdvgen",
+    version = "0.0.1",
+    repo_name = "com_hdl_uvmdvgen",
+)
+
+# Python toolchain
+bazel_dep(name = "rules_python", version = "0.36.0")
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    python_version = "3.11",
+)
+use_repo(python)
+
+# Python PIP
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "umvmdvgen_pip_deps",
+    python_version = "3.11",
+    requirements_lock = "//:python-requirements.out",
+)
+use_repo(pip, "umvmdvgen_pip_deps")
+
+# Buildifier
+bazel_dep(name = "buildifier_prebuilt", version = "7.3.1")
