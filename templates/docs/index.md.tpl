@@ -27,7 +27,7 @@ ${'##'} Design features
 For detailed information on ${name.upper()} design features, please see the [${name.upper()} HWIP technical specification]({{< relref "hw/ip/${name}/doc" >}}).
 
 ${'##'} Testbench architecture
-${name.upper()} testbench has been constructed based on the [CIP testbench architecture]({{< relref "hw/dv/sv/cip_lib/doc" >}}).
+${name.upper()} testbench has been constructed based on the [DV testbench architecture]({{< relref "hw/dv/sv/dv_lib/doc" >}}).
 
 ${'###'} Block diagram
 ![Block diagram](tb.svg)
@@ -56,19 +56,6 @@ All common types and methods defined at the package level can be found in
 ```systemverilog
 [list a few parameters, types & methods; no need to mention all]
 ```
-% if is_cip:
-${'###'} TL_agent
-The ${name.upper()} testbench instantiates (already handled in CIP base env) [tl_agent]({{< relref "hw/dv/sv/tl_agent/doc" >}}).
-This provides the ability to drive and independently monitor random traffic via the TL host interface into the ${name.upper()} device.
-
-% endif
-% if has_alerts:
-${'###'} Alert_agents
-${name.upper()} testbench instantiates (already handled in CIP base env) [alert_agents]({{< relref "hw/dv/sv/alert_esc_agent/doc" >}}):
-[list alert names].
-The alert_agents provide the ability to drive and independently monitor alert handshakes via alert interfaces in ${name.upper()} device.
-
-% endif
 % for agent in env_agents:
 ${'### '} ${agent.upper()} Agent
 [Describe here or add link to its README]
@@ -93,7 +80,7 @@ ${'###'} Reference models
 ${'###'} Stimulus strategy
 ${'####'} Test sequences
 The test sequences reside in `hw/ip/${name}/dv/env/seq_lib`.
-All test sequences are extended from `${name}_base_vseq`, which is extended from `cip_base_vseq` and serves as a starting point.
+All test sequences are extended from `${name}_base_vseq`, which is extended from `dv_base_vseq` and serves as a starting point.
 It provides commonly used handles, variables, functions and tasks that the test sequences can simple use / call.
 Some of the most commonly used tasks / functions are as follows:
 * task 1:

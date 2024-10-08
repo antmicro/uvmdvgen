@@ -10,11 +10,7 @@ filesets:
 % if has_ral:
       - lowrisc:dv:ralgen
 % endif
-% if is_cip:
-      - lowrisc:dv:cip_lib
-% else:
       - lowrisc:dv:dv_lib
-% endif
 % for agent in env_agents:
       - ${vendor}:dv:${agent}_agent
 % endfor

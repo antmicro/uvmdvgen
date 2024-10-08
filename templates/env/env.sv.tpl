@@ -1,12 +1,9 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
-% if is_cip:
-class ${name}_env extends cip_base_env #(
-% else:
 class ${name}_env extends dv_base_env #(
-% endif
     .CFG_T              (${name}_env_cfg),
     .COV_T              (${name}_env_cov),
     .VIRTUAL_SEQUENCER_T(${name}_virtual_sequencer),

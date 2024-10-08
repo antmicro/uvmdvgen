@@ -1,6 +1,7 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
 class ${name}_agent extends dv_base_agent #(
   .CFG_T          (${name}_agent_cfg),

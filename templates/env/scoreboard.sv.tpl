@@ -1,12 +1,9 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
-% if is_cip:
-class ${name}_scoreboard extends cip_base_scoreboard #(
-% else:
 class ${name}_scoreboard extends dv_base_scoreboard #(
-% endif
     .CFG_T(${name}_env_cfg),
 % if has_ral:
     .RAL_T(${name}_reg_block),
@@ -34,10 +31,6 @@ class ${name}_scoreboard extends dv_base_scoreboard #(
 % for agent in env_agents:
     ${agent}_fifo = new("${agent}_fifo", this);
 % endfor
-% if has_alerts:
-    // TODO: remove once support alert checking
-    do_alert_check = 0;
-% endif
   endfunction
 
   function void connect_phase(uvm_phase phase);
@@ -62,63 +55,6 @@ class ${name}_scoreboard extends dv_base_scoreboard #(
     end
   endtask
 % endfor
-% if is_cip:
-
-  virtual task process_tl_access(tl_seq_item item, tl_channels_e channel, string ral_name);
-    uvm_reg csr;
-    bit     do_read_check   = 1'b1;
-    bit     write           = item.is_write();
-    uvm_reg_addr_t csr_addr = cfg.ral_models[ral_name].get_word_aligned_addr(item.a_addr);
-
-    bit addr_phase_read   = (!write && channel == AddrChannel);
-    bit addr_phase_write  = (write && channel == AddrChannel);
-    bit data_phase_read   = (!write && channel == DataChannel);
-    bit data_phase_write  = (write && channel == DataChannel);
-
-    // if access was to a valid csr, get the csr handle
-    if (csr_addr inside {cfg.ral_models[ral_name].csr_addrs}) begin
-      csr = cfg.ral_models[ral_name].default_map.get_reg_by_offset(csr_addr);
-      `DV_CHECK_NE_FATAL(csr, null)
-    end
-    else begin
-      `uvm_fatal(`gfn, $sformatf("Access unexpected addr 0x%0h", csr_addr))
-    end
-
-    // if incoming access is a write to a valid csr, then make updates right away
-    if (addr_phase_write) begin
-      void'(csr.predict(.value(item.a_data), .kind(UVM_PREDICT_WRITE), .be(item.a_mask)));
-    end
-
-    // process the csr req
-    // for write, update local variable and fifo at address phase
-    // for read, update predication at address phase and compare at data phase
-    case (csr.get_name())
-      // add individual case item for each csr
-      "intr_state": begin
-        // FIXME
-        do_read_check = 1'b0;
-      end
-      "intr_enable": begin
-        // FIXME
-      end
-      "intr_test": begin
-        // FIXME
-      end
-      default: begin
-        `uvm_fatal(`gfn, $sformatf("invalid csr: %0s", csr.get_full_name()))
-      end
-    endcase
-
-    // On reads, if do_read_check, is set, then check mirrored_value against item.d_data
-    if (data_phase_read) begin
-      if (do_read_check) begin
-        `DV_CHECK_EQ(csr.get_mirrored_value(), item.d_data,
-                     $sformatf("reg name: %0s", csr.get_full_name()))
-      end
-      void'(csr.predict(.value(item.d_data), .kind(UVM_PREDICT_READ)));
-    end
-  endtask
-% endif
 
   virtual function void reset(string kind = "HARD");
     super.reset(kind);

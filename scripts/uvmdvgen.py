@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 r"""Command-line tool to generate boilerplate DV testbench.
 
-The generated objects are extended from dv_lib / cip_lib.
+The generated objects are extended from dv_lib.
 """
 import argparse
 import logging as log
@@ -42,16 +42,7 @@ def main():
     parser.add_argument("-e",
                         "--gen-env",
                         action='store_true',
-                        help="Generate testbench UVM env code")
-
-    parser.add_argument(
-        "-c",
-        "--is-cip",
-        action='store_true',
-        help=
-        """Is comportable IP - this will result in code being extended from CIP
-        library. If switch is not passed, the code will be extended from DV
-        library instead. (Ignored if -e switch is not passed.)""")
+                        help="Generate UVM environment code")
 
     parser.add_argument(
         "-hr",
@@ -59,39 +50,22 @@ def main():
         default=False,
         action='store_true',
         help="""Specify whether the DUT has CSRs and thus needs a UVM RAL model.
-                This option is required if either --is_cip or --has_interrupts
-                are enabled.""")
-
-    parser.add_argument(
-        "-hi",
-        "--has-interrupts",
-        default=False,
-        action='store_true',
-        help="""CIP has interrupts. Create interrupts interface in tb""")
-
-    parser.add_argument(
-        "-ha",
-        "--has-alerts",
-        default=False,
-        action='store_true',
-        help="""CIP has alerts. Create alerts interface in tb""")
-
-    parser.add_argument(
-        "-ne",
-        "--num-edn",
-        default=0,
-        type=int,
-        help="""CIP has EDN connection. Create edn pull interface in tb""")
+             """)
 
     parser.add_argument(
         "-ea",
         "--env-agents",
         nargs="+",
         metavar="agt1 agt2",
-        help="""Env creates an interface agent specified here. They are
+        help="""Env/bench create an interface agent specified here. They are
                 assumed to already exist. Note that the list is space-separated,
                 and not comma-separated. (ignored if -e switch is not passed)"""
     )
+
+    parser.add_argument("-b",
+                        "--gen-bench",
+                        action='store_true',
+                        help="Generate UVM testbench code")
 
     parser.add_argument(
         "-ao",
@@ -104,13 +78,16 @@ def main():
         "-eo",
         "--env-outdir",
         metavar="[hw/ip/<ip>]",
-        help="""Path to place the full testbench code. It creates 3 directories
-        - dv, data, and doc. The DV doc and the testplan Hjson files are placed
-        in the doc and data directories respectively. These are to be merged
-        into the IP's root directory (with the existing data and doc
-        directories). Under dv, it creates 3 sub-directories - env, tb, and
-        tests - to place all of the testbench sources. (default set to
-        './<name>'.)""")
+        help="""Path to place the enviroment code. It creates dv/env directory
+        with environment sources. (default set to './<name>'.)""")
+
+    parser.add_argument(
+        "-bo",
+        "--bench-outdir",
+        metavar="[hw/ip/<ip>]",
+        help="""Path to place the testbench code. It creates dv directory.
+        Under dv, it creates 3 sub-directories - cov, sva, and
+        tests and tb.sv file. (default set to './<name>'.)""")
 
     parser.add_argument(
         "-v",
@@ -119,6 +96,13 @@ def main():
         help=
         """Name of the vendor / entity developing the testbench. This is used
         to set the VLNV of the FuseSoC core files.""")
+
+    parser.add_argument(
+        "-fsoc",
+        "--fusesoc",
+        action='store_true',
+        help=
+        """Enable FuseSoC core files generation.""")
 
     args = parser.parse_args()
 
@@ -133,24 +117,24 @@ def main():
     if not args.env_outdir:
         args.env_outdir = args.name
 
-    # The has_ral option must be set if either is_cip or has_interrupts is set,
-    # as both require use of a RAL model. As such, it is disallowed to not have
-    # has_ral set if one of these options is set.
-    if not args.has_ral and (args.is_cip or args.has_interrupts):
-        args.has_ral = True
-        print("NOTE: --has_ral switch is enabled since either "
-              "--is_cip or --has_interrupts is set.")
-
     if args.gen_agent:
         gen_agent.gen_agent(args.name, args.has_separate_host_device_driver,
-                            args.agent_outdir, args.vendor)
+                            args.agent_outdir, args.vendor,
+                            gen_core_file=args.fusesoc)
 
     if args.gen_env:
         if not args.env_agents:
             args.env_agents = []
-        gen_env.gen_env(args.name, args.is_cip, args.has_ral,
-                        args.has_interrupts, args.has_alerts, args.num_edn,
-                        args.env_agents, args.env_outdir, args.vendor)
+        gen_env.gen_env(args.name, args.has_ral, args.env_agents,
+                        args.env_outdir, args.vendor,
+                        gen_core_file=args.fusesoc)
+
+    if args.gen_bench:
+        if not args.env_agents:
+            args.env_agents = []
+        gen_bench.gen_bench(args.name, args.has_ral, args.env_agents,
+                            args.bench_outdir, args.vendor,
+                            gen_core_file=args.fusesoc)
 
 
 if __name__ == '__main__':

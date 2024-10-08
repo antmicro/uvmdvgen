@@ -1,12 +1,9 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
-% if is_cip:
-class ${name}_base_test extends cip_base_test #(
-% else:
 class ${name}_base_test extends dv_base_test #(
-% endif
     .CFG_T(${name}_env_cfg),
     .ENV_T(${name}_env)
   );
@@ -23,9 +20,6 @@ class ${name}_base_test extends dv_base_test #(
     super.build_phase(phase);
     cfg.has_ral = 1'b0;
   endfunction
-% if num_edn:
-    cfg.num_edn = ${num_edn};
-% endif
 % endif
   // the base class also looks up UVM_TEST_SEQ plusarg to create and run that seq in
   // the run_phase; as such, nothing more needs to be done

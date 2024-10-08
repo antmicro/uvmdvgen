@@ -1,15 +1,12 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
 package ${name}_test_pkg;
   // dep packages
   import uvm_pkg::*;
-% if is_cip:
-  import cip_base_pkg::*;
-% else:
   import dv_lib_pkg::*;
-% endif
   import ${name}_env_pkg::*;
 
   // macro includes

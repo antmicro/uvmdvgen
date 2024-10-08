@@ -9,6 +9,7 @@
 //
 // This package defines common multibit signal types, active high and active low values and
 // the corresponding functions to test whether the values are set or not.
+`timescale 1ns/1ps
 
 `include "prim_assert.sv"
 

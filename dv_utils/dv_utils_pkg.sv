@@ -1,6 +1,7 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
 package dv_utils_pkg;
   // dep packages
@@ -12,13 +13,6 @@ package dv_utils_pkg;
 `ifdef UVM
   `include "uvm_macros.svh"
 `endif
-
-  // common parameters used across all benches
-  parameter int NUM_MAX_INTERRUPTS = 32;
-  typedef logic [NUM_MAX_INTERRUPTS-1:0] interrupt_t;
-
-  parameter int NUM_MAX_ALERTS = 32;
-  typedef logic [NUM_MAX_ALERTS-1:0] alert_t;
 
   // types & variables
   typedef bit [31:0] uint;
@@ -33,9 +27,6 @@ package dv_utils_pkg;
   typedef bit [15:0] uint16_t;
   typedef bit [31:0] uint32_t;
   typedef bit [63:0] uint64_t;
-
-  // typedef parameterized pins_if for ease of implementation for interrupts and alerts
-  typedef virtual pins_if #(NUM_MAX_INTERRUPTS) intr_vif;
 
   // interface direction / mode - Host or Device
   typedef enum bit {

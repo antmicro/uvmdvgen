@@ -9,6 +9,7 @@ bazel_dep(name = "rules_python", version = "0.36.0")
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
     python_version = "3.11",
+    ignore_root_user_error = True,
 )
 use_repo(python)
 
@@ -23,3 +24,18 @@ use_repo(pip, "umvmdvgen_pip_deps")
 
 # Buildifier
 bazel_dep(name = "buildifier_prebuilt", version = "7.3.1")
+
+#bazel_dep(name = "rules_cc", version = "0.0.13")
+bazel_dep(name = "toolchains_llvm", version = "1.2.0")
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+
+LLVM_VERSIONS = {
+    "": "16.0.0",
+}
+
+llvm.toolchain(
+    name = "llvm_toolchain",
+    llvm_versions = LLVM_VERSIONS,
+)
+use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
+register_toolchains("@llvm_toolchain//:all")

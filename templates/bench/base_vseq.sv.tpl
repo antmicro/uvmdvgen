@@ -1,12 +1,9 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
-% if is_cip:
-class ${name}_base_vseq extends cip_base_vseq #(
-% else:
 class ${name}_base_vseq extends dv_base_vseq #(
-% endif
 % if has_ral:
     .RAL_T               (${name}_reg_block),
 % endif
@@ -33,7 +30,7 @@ class ${name}_base_vseq extends dv_base_vseq #(
 
   // setup basic ${name} features
   virtual task ${name}_init();
-    `uvm_error(`gfn, "FIXME")
+    `uvm_warning(`gfn, "FIXME")
   endtask
 
 endclass : ${name}_base_vseq

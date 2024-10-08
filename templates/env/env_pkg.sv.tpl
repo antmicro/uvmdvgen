@@ -1,6 +1,7 @@
 // Copyright lowRISC contributors (OpenTitan project).
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
+`timescale 1ns/1ps
 
 package ${name}_env_pkg;
   // dep packages
@@ -11,12 +12,9 @@ package ${name}_env_pkg;
   import ${agent}_agent_pkg::*;
 % endfor
   import dv_lib_pkg::*;
-% if is_cip:
-  import tl_agent_pkg::*;
-  import cip_base_pkg::*;
-% endif
-% if has_ral:
+% if not has_ral:
   import dv_base_reg_pkg::*;
+% else:
   import csr_utils_pkg::*;
   import ${name}_ral_pkg::*;
 % endif
@@ -26,11 +24,6 @@ package ${name}_env_pkg;
   `include "dv_macros.svh"
 
   // parameters
-% if has_alerts:
-  // TODO: add the names of alerts in order
-  parameter string LIST_OF_ALERTS[] = {};
-  parameter uint   NUM_ALERTS = ;
-% endif
 
   // types
 % if not has_ral:

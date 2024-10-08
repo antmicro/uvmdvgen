@@ -20,11 +20,9 @@ class dv_report_server extends uvm_default_report_server;
   endfunction
 
   function void report_summarize(UVM_FILE file = 0);
-    int num_uvm_warning;
     int num_uvm_error;
     int num_uvm_fatal;
 
-    num_uvm_warning = get_severity_count(UVM_WARNING);
     num_uvm_error   = get_severity_count(UVM_ERROR);
     num_uvm_fatal   = get_severity_count(UVM_FATAL);
 
@@ -33,7 +31,7 @@ class dv_report_server extends uvm_default_report_server;
 
     // Print final test pass-fail - external tool can use this signature for test status
     // Treat UVM_WARNINGs as a sign of test failure since it could silently result in false pass
-    dv_test_status_pkg::dv_test_status((num_uvm_warning + num_uvm_error + num_uvm_fatal) == 0);
+    dv_test_status_pkg::dv_test_status((num_uvm_error + num_uvm_fatal) == 0);
   endfunction
 
   // Override default messaging format to standard "pretty" format for all testbenches

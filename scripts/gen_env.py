@@ -10,8 +10,8 @@ import logging as log
 from mako.template import Template
 import importlib_resources
 
-def gen_env(name, is_cip, has_ral, has_interrupts, has_alerts, num_edn,
-            env_agents, root_dir, vendor, license_header="", gen_core_file=True):
+def gen_env(name, has_ral, env_agents, root_dir, vendor, license_header="",
+            gen_core_file=True):
     # yapf: disable
     # flake8: noqa
     # 4-tuple - sub-path, ip name, class name, file ext
@@ -53,11 +53,7 @@ def gen_env(name, is_cip, has_ral, has_interrupts, has_alerts, num_edn,
             try:
                 fout.write(
                     tpl.render(name=name,
-                               is_cip=is_cip,
                                has_ral=has_ral,
-                               has_interrupts=has_interrupts,
-                               has_alerts=has_alerts,
-                               num_edn=num_edn,
                                env_agents=env_agents,
                                vendor=vendor,
                                license_header=license_header))
