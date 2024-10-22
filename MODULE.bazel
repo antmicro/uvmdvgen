@@ -39,3 +39,17 @@ llvm.toolchain(
 )
 use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
 register_toolchains("@llvm_toolchain//:all")
+
+http_archive = use_repo_rule("@bazel_tools//:http.bzl", "http_archive")
+
+# HDL Rules
+rules_hdl_git_hash = "40e5e109069cb91cbab6a32f83c7a71aefae527e"
+rules_hdl_git_sha256 = "3987575b3ee9874ca451a53508872cbaf58e5cb4aa6ccb80fcf4331535f5772e"
+http_archive(
+    name = "rules_hdl",
+    sha256 = rules_hdl_git_sha256,
+    strip_prefix = "bazel_rules_hdl-%s" % rules_hdl_git_hash,
+    urls = [
+        "https://github.com/hdl/bazel_rules_hdl/archive/%s.tar.gz" % rules_hdl_git_hash,
+    ],
+)

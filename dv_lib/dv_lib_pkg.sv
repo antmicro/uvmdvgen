@@ -20,27 +20,27 @@ package dv_lib_pkg;
 
   // package sources
   // base agent
-  `include "dv_base_agent_cfg.sv"
-  `include "dv_base_agent_cov.sv"
-  `include "dv_base_monitor.sv"
-  `include "dv_base_sequencer.sv"
-  `include "dv_base_driver.sv"
-  `include "dv_base_agent.sv"
+  `include "dv_base_agent_cfg.svh"
+  `include "dv_base_agent_cov.svh"
+  `include "dv_base_monitor.svh"
+  `include "dv_base_sequencer.svh"
+  `include "dv_base_driver.svh"
+  `include "dv_base_agent.svh"
 
   // base seq
-  `include "dv_base_seq.sv"
+  `include "dv_base_seq.svh"
 
   // base env
-  `include "dv_base_env_cfg.sv"
-  `include "dv_base_env_cov.sv"
-  `include "dv_base_virtual_sequencer.sv"
-  `include "dv_base_scoreboard.sv"
-  `include "dv_base_env.sv"
+  `include "dv_base_env_cfg.svh"
+  `include "dv_base_env_cov.svh"
+  `include "dv_base_virtual_sequencer.svh"
+  `include "dv_base_scoreboard.svh"
+  `include "dv_base_env.svh"
 
   // base test vseq
-  `include "dv_base_vseq.sv"
+  `include "dv_base_vseq.svh"
 
   // base test
-  `include "dv_base_test.sv"
+  `include "dv_base_test.svh"
 
 endpackage

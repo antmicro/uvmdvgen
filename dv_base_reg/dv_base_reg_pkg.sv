@@ -134,14 +134,14 @@ package dv_base_reg_pkg;
     return mask;
   endfunction
 
-  `include "csr_excl_item.sv"
-  `include "dv_base_lockable_field_cov.sv"
-  `include "dv_base_shadowed_field_cov.sv"
-  `include "dv_base_mubi_cov.sv"
-  `include "dv_base_reg_field.sv"
-  `include "dv_base_reg.sv"
-  `include "dv_base_mem.sv"
-  `include "dv_base_reg_block.sv"
-  `include "dv_base_reg_map.sv"
+  `include "csr_excl_item.svh"
+  `include "dv_base_lockable_field_cov.svh"
+  `include "dv_base_shadowed_field_cov.svh"
+  `include "dv_base_mubi_cov.svh"
+  `include "dv_base_reg_field.svh"
+  `include "dv_base_reg.svh"
+  `include "dv_base_mem.svh"
+  `include "dv_base_reg_block.svh"
+  `include "dv_base_reg_map.svh"
 
 endpackage

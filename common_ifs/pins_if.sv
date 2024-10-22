@@ -14,7 +14,7 @@ interface pins_if #(
   inout [Width-1:0] pins
 );
 
-  `include "prim_assert.sv"
+  `include "prim_assert.svh"
 
   `ASSERT_INIT(PullStrengthParamValid, PullStrength inside {"Weak", "Pull"})
 

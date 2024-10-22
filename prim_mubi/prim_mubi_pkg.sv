@@ -11,7 +11,7 @@
 // the corresponding functions to test whether the values are set or not.
 `timescale 1ns/1ps
 
-`include "prim_assert.sv"
+`include "prim_assert.svh"
 
 package prim_mubi_pkg;
 
