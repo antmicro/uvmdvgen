@@ -1,6 +1,3 @@
-// Copyright lowRISC contributors (OpenTitan project).
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
-// SPDX-License-Identifier: Apache-2.0
 `timescale 1ns/1ps
 
 package ${name}_agent_pkg;
@@ -34,17 +31,17 @@ package ${name}_agent_pkg;
   // functions
 
   // package sources
-  `include "${name}_item.sv"
-  `include "${name}_agent_cfg.sv"
-  `include "${name}_agent_cov.sv"
+  `include "${name}_item.svh"
+  `include "${name}_agent_cfg.svh"
+  `include "${name}_agent_cov.svh"
 % if has_separate_host_device_driver:
-  `include "${name}_host_driver.sv"
-  `include "${name}_device_driver.sv"
+  `include "${name}_host_driver.svh"
+  `include "${name}_device_driver.svh"
 % else:
-  `include "${name}_driver.sv"
+  `include "${name}_driver.svh"
 % endif
-  `include "${name}_monitor.sv"
-  `include "${name}_agent.sv"
-  `include "${name}_seq_list.sv"
+  `include "${name}_monitor.svh"
+  `include "${name}_agent.svh"
+  `include "${name}_seq_list.svh"
 
 endpackage: ${name}_agent_pkg

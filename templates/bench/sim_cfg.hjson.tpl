@@ -1,6 +1,3 @@
-// Copyright lowRISC contributors (OpenTitan project).
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
-// SPDX-License-Identifier: Apache-2.0
 {
   // Name of the sim cfg - typically same as the name of the DUT.
   name: ${name}

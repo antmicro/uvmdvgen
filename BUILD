@@ -20,4 +20,3 @@ buildifier(
     ],
     lint_mode = "fix",
 )
-

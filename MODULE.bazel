@@ -6,10 +6,11 @@ module(
 
 # Python toolchain
 bazel_dep(name = "rules_python", version = "0.36.0")
+
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
-    python_version = "3.11",
     ignore_root_user_error = True,
+    python_version = "3.11",
 )
 use_repo(python)
 
@@ -27,6 +28,7 @@ bazel_dep(name = "buildifier_prebuilt", version = "7.3.1")
 
 #bazel_dep(name = "rules_cc", version = "0.0.13")
 bazel_dep(name = "toolchains_llvm", version = "1.2.0")
+
 llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
 
 LLVM_VERSIONS = {
@@ -38,18 +40,19 @@ llvm.toolchain(
     llvm_versions = LLVM_VERSIONS,
 )
 use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
+
 register_toolchains("@llvm_toolchain//:all")
 
 http_archive = use_repo_rule("@bazel_tools//:http.bzl", "http_archive")
 
 # HDL Rules
-rules_hdl_git_hash = "40e5e109069cb91cbab6a32f83c7a71aefae527e"
-rules_hdl_git_sha256 = "3987575b3ee9874ca451a53508872cbaf58e5cb4aa6ccb80fcf4331535f5772e"
+rules_hdl_git_hash = "6e9ba43877e5077a251417d01927d1ad9b4a5392"
+rules_hdl_git_sha256 = "c689d9c742f479a12602b466762ca1ac487f68f581ccc10381cb7e63fd7a8dca"
 http_archive(
     name = "rules_hdl",
     sha256 = rules_hdl_git_sha256,
     strip_prefix = "bazel_rules_hdl-%s" % rules_hdl_git_hash,
     urls = [
-        "https://github.com/hdl/bazel_rules_hdl/archive/%s.tar.gz" % rules_hdl_git_hash,
+        "https://github.com/antmicro/bazel_rules_hdl/archive/%s.tar.gz" % rules_hdl_git_hash,
     ],
 )

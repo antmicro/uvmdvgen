@@ -1,6 +1,3 @@
-// Copyright lowRISC contributors (OpenTitan project).
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
-// SPDX-License-Identifier: Apache-2.0
 `timescale 1ns/1ps
 
 package ${name}_env_pkg;
@@ -33,10 +30,10 @@ package ${name}_env_pkg;
   // functions
 
   // package sources
-  `include "${name}_env_cfg.sv"
-  `include "${name}_env_cov.sv"
-  `include "${name}_virtual_sequencer.sv"
-  `include "${name}_scoreboard.sv"
-  `include "${name}_env.sv"
+  `include "${name}_env_cfg.svh"
+  `include "${name}_env_cov.svh"
+  `include "${name}_virtual_sequencer.svh"
+  `include "${name}_scoreboard.svh"
+  `include "${name}_env.svh"
 
 endpackage

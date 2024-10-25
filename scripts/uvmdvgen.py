@@ -10,10 +10,12 @@ import argparse
 import logging as log
 import re
 import sys
+from pathlib import Path
 
 from scripts import gen_agent
 from scripts import gen_env
 from scripts import gen_bench
+from scripts import gen_dotf
 
 def main():
     parser = argparse.ArgumentParser(
@@ -35,8 +37,7 @@ def main():
         "-s",
         "--has-separate-host-device-driver",
         action='store_true',
-        help=
-        """IP / block agent creates a separate driver for host and device modes.
+        help="""IP / block agent creates a separate driver for host and device modes.
         (Ignored if -a switch is not passed.)""")
 
     parser.add_argument("-e",
@@ -93,19 +94,41 @@ def main():
         "-v",
         "--vendor",
         default="",
-        help=
-        """Name of the vendor / entity developing the testbench. This is used
+        help="""Name of the vendor / entity developing the testbench. This is used
         to set the VLNV of the FuseSoC core files.""")
 
     parser.add_argument(
         "-fsoc",
         "--fusesoc",
         action='store_true',
-        help=
-        """Enable FuseSoC core files generation.""")
+        help="""Enable FuseSoC core files generation.""")
+
+    parser.add_argument(
+        "-bzl",
+        "--bazel",
+        action='store_true',
+        help="""Enable Bazel BUILD files generation.""")
+
+    parser.add_argument(
+        '-bzlroot',
+        '--bazel-root',
+        required='-bzl' in sys.argv or '--bazel' in sys.argv,
+        help="""Path to the root of the bazel workspace (where the WORKSPACE file resides)""")
+
+    parser.add_argument(
+        "-ld",
+        "--link-dependencies",
+        action='store_true',
+        help="""""")
+
+    parser.add_argument(
+        "-d",
+        "--dependency-root-dir",
+        default="",
+        required='-ld' in sys.argv or '--link-dependencies' in sys.argv,
+        help="""""")
 
     args = parser.parse_args()
-
     # The name should be alphanumeric.
     if re.search(r"\W", args.name):
         log.error("The block name '%s' contains non-alphanumeric characters.",
@@ -116,26 +139,33 @@ def main():
         args.agent_outdir = args.name
     if not args.env_outdir:
         args.env_outdir = args.name
+    if not args.bench_outdir:
+        args.bench_outdir = args.name
+    if not args.bazel_root:
+        args.bazel_root = ""
+    if not args.link_dependencies or not args.dependency_root_dir:
+        args.dependency_root_dir = ""
 
     if args.gen_agent:
         gen_agent.gen_agent(args.name, args.has_separate_host_device_driver,
                             args.agent_outdir, args.vendor,
-                            gen_core_file=args.fusesoc)
+                            gen_core_file=args.fusesoc, gen_bazel_file=args.bazel)
 
     if args.gen_env:
         if not args.env_agents:
             args.env_agents = []
         gen_env.gen_env(args.name, args.has_ral, args.env_agents,
                         args.env_outdir, args.vendor,
-                        gen_core_file=args.fusesoc)
+                        gen_core_file=args.fusesoc, gen_bazel_file=args.bazel)
 
     if args.gen_bench:
         if not args.env_agents:
             args.env_agents = []
         gen_bench.gen_bench(args.name, args.has_ral, args.env_agents,
                             args.bench_outdir, args.vendor,
-                            gen_core_file=args.fusesoc)
-
+                            gen_core_file=args.fusesoc, gen_bazel_file=args.bazel_root)
+        gen_dotf.generate_dotf(args.name, args.bazel_root, Path(args.bench_outdir),
+                               Path(args.bench_outdir) / 'dv/tb.f', link_dependencies=args.dependency_root_dir)
 
 if __name__ == '__main__':
     main()

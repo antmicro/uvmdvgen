@@ -1,4 +1,4 @@
-`ifndef ${module_type_upper()}_${interface_name.upper()}_${agent_name.upper()}_IF_BIND
+`ifndef ${module_type.upper()}_${interface_name.upper()}_${agent_name.upper()}_IF_BIND
 `define ${module_type.upper()}_${interface_name.upper()}_${agent_name.upper()}_IF_BIND
 module ${module_type}_${interface_name}_${agent_name}_if_bind ();
 bind ${module_type} ${agent_name}_if ${interface_name}_${agent_name}_if (

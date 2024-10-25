@@ -15,6 +15,7 @@ inout tri ${wires[-1]}
 % endif
 );
 
+% if clock or reset or wires:
 modport passive_port(
 % if clock:
   input ${clock},
@@ -29,7 +30,9 @@ input ${wires[-1][1]}
 % endfor
 % endif
 );
+%endif
 
+% if clock or reset or wires:
 modport init_port(
 % if clock:
   input {clock},
@@ -44,7 +47,9 @@ input ${wires[-1][0]} ${wires[-1][1]}
 % endfor
 % endif
 );
+%endif
 
+% if clock or reset or wires:
 modport resp_port(
 % if clock:
   input {clock},
@@ -69,5 +74,6 @@ modport resp_port(
 ${opposite[-1][0]} ${opposite[-1][1]}
 % endif
 );
+%endif
 
 endinterface

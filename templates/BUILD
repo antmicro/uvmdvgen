@@ -5,20 +5,25 @@ package(
 
 filegroup(
     name = "fusesoc_templates",
-    srcs = glob(['fusesoc/*'])
+    srcs = glob(["fusesoc/*"]),
 )
 
 filegroup(
     name = "agent_templates",
-    srcs = glob(['agent/*'])
+    srcs = glob(["agent/*"]),
 )
 
 filegroup(
     name = "env_templates",
-    srcs = glob(['env/*'])
+    srcs = glob(["env/*"]),
 )
 
 filegroup(
     name = "bench_templates",
-    srcs = glob(['bench/*'])
+    srcs = glob(["bench/*"]),
+)
+
+filegroup(
+    name = "bazel_templates",
+    srcs = glob(["bazel/*"]),
 )

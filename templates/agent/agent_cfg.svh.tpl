@@ -1,7 +1,8 @@
-// Copyright lowRISC contributors (OpenTitan project).
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
-// SPDX-License-Identifier: Apache-2.0
 `timescale 1ns/1ps
+
+// macro includes
+`include "uvm_macros.svh"
+`include "dv_macros.svh"
 
 class ${name}_agent_cfg extends dv_base_agent_cfg;
 

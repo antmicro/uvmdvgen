@@ -1,8 +1,8 @@
 % for _, sub_env_type, _ in envs:
   `include "${sub_env_type}_if_bind"
 % endfor
-% for module_type, interface_name, agent_type in agets:
-  `include "${module_type}_${interface_name}_${agent_type}_if_bind.sv"
+% for mod_type, interface_name, agent_type in agents:
+  `include "${mod_type}_${interface_name}_${agent_type}_if_bind.sv"
 % endfor
 `ifndef ${env_type.upper()}_IF_BIND
 `define ${env_type.upper()}_IF_BIND
@@ -21,7 +21,7 @@ bind ${module_type} ${env_type}_if ${env_type}_if(
     % endif
 % endif
 % if agents:
-    % for _, interface_name, agent_type in agets[:-1]:
+    % for _, interface_name, agent_type in agents[:-1]:
   .${interface_name}_${agent_type}_if(${interface_name}_${agent_type}_if),
     % endfor
   .${agents[-1][1]}_${agents[-1][2]}_if(${agents[-1][1]}_${agents[-1][2]}_if)

@@ -6,7 +6,7 @@
 % endfor
 interface ${env_name}_if(
 % if envs:
-    % if agets:
+    % if agents:
         % for _, sub_env_type, sub_env_name in envs:
   ${sub_env_type}_if ${sub_env_name}_if,
         % endfor
@@ -18,7 +18,7 @@ interface ${env_name}_if(
     % endif
 % endif
 % if agents:
-    % for _, interface_name, agent_type in agets[:-1]:
+    % for _, interface_name, agent_type in agents[:-1]:
   ${agent_type}_if ${interface_name}_${agent_type}_if,
     % endfor
   ${agents[-1][2]}_if ${agents[-1][1]}_${agents[-1][2]}_if,

@@ -1,6 +1,3 @@
-// Copyright lowRISC contributors (OpenTitan project).
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
-// SPDX-License-Identifier: Apache-2.0
 `timescale 1ns/1ps
 
 package ${name}_test_pkg;
@@ -18,7 +15,7 @@ package ${name}_test_pkg;
   // functions
 
   // package sources
-  `include "${name}_vseq_list.sv"
-  `include "${name}_base_test.sv"
+  `include "${name}_vseq_list.svh"
+  `include "${name}_base_test.svh"
 
 endpackage
