@@ -1,0 +1,3 @@
+include:
+  - project: repositories/chipsalliance-ci-scripts
+    file: uvmdvgen.yaml
