@@ -1,0 +1,38 @@
+module(
+    name = "uvmdvgen",
+    version = "0.0.1",
+    repo_name = "com_hdl_uvmdvgen",
+)
+
+# Buildifier
+bazel_dep(name = "buildifier_prebuilt", version = "7.3.1")
+
+bazel_dep(name = "toolchains_llvm", version = "1.2.0")
+
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+
+LLVM_VERSIONS = {
+    "": "16.0.0",
+}
+
+llvm.toolchain(
+    name = "llvm_toolchain",
+    llvm_versions = LLVM_VERSIONS,
+)
+use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
+
+register_toolchains("@llvm_toolchain//:all")
+
+http_archive = use_repo_rule("@bazel_tools//:http.bzl", "http_archive")
+
+# HDL Rules
+rules_hdl_git_hash = "6e9ba43877e5077a251417d01927d1ad9b4a5392"
+rules_hdl_git_sha256 = "c689d9c742f479a12602b466762ca1ac487f68f581ccc10381cb7e63fd7a8dca"
+http_archive(
+    name = "rules_hdl",
+    sha256 = rules_hdl_git_sha256,
+    strip_prefix = "bazel_rules_hdl-%s" % rules_hdl_git_hash,
+    urls = [
+        "https://github.com/antmicro/bazel_rules_hdl/archive/%s.tar.gz" % rules_hdl_git_hash,
+    ],
+)

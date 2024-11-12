@@ -1,0 +1,5 @@
+include uvmdvgen/templates/*
+include uvmdvgen/templates/**/*
+include uvmdvgen/uvm_dv_lib/*
+include uvmdvgen/uvm_dv_lib/**/*
+include uvmdvgen/uvm_dv_lib/.bazelrc

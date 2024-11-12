@@ -1,0 +1,19 @@
+[project]
+name = "uvmdvgen"
+version = "0.0.1"
+description = "Initial testbench autogeneration tool"
+dependencies = [
+    "mako"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+uvmdvgen = "uvmdvgen.uvmdvgen:main"
+
+[tool.setuptools.packages.find]
+include = [
+    "uvmdvgen"
+]
