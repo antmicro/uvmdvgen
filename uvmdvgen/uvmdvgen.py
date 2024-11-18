@@ -173,6 +173,13 @@ def main():
     )
 
     parser.add_argument(
+        '--seq-lib-location',
+        help="Location of the seq_lib library",
+        choices=["tests", "env"],
+        default="tests",
+    )
+
+    parser.add_argument(
         "-ld",
         "--link-dependencies",
         action='store_true')
@@ -267,6 +274,7 @@ def main():
             has_alerts=args.has_alerts,
             has_interrupts=args.has_interrupts,
             num_edn=args.num_edn,
+            seq_lib_location=args.seq_lib_location,
         )
         gen_dotf.generate_dotf(
             name=args.name,

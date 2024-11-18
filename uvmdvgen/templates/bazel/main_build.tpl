@@ -21,7 +21,7 @@ verilog_library(
         "//${bzl_relative_dir}/${name}_agent:${name}_agent",
         "//${bzl_relative_dir}/dv/env:env",
         "//${bzl_relative_dir}/dv/tests:${name}_tests",
-        "//${bzl_relative_dir}/dv/tests/seq_lib:${name}_tests_seq_lib",
+        "//${bzl_relative_dir}/dv/${seq_lib_location}/seq_lib:${name}_tests_seq_lib",
         "//hw/ip/hif_adapter/rtl:hif_adapter",
     ],
 )

@@ -13,14 +13,14 @@ from uvmdvgen import templates
 from pathlib import Path
 
 def gen_bench(name, has_ral, env_agents, root_dir, vendor, bazel_root=".", license_header=[],
-              gen_core_file=True, gen_bazel_file=False, use_svh=True, default_timescale="", is_cip=False, has_alerts=False, has_interrupts=False, num_edn=0):
+              gen_core_file=True, gen_bazel_file=False, use_svh=True, default_timescale="", is_cip=False, has_alerts=False, has_interrupts=False, num_edn=0, seq_lib_location="tests"):
     # yapf: disable
     # flake8: noqa
     # 4-tuple - sub-path, ip name, class name, file ext
-    env_srcs = [('dv/env/seq_lib',  name + '_', 'base_vseq',           '.svh'),
-                ('dv/env/seq_lib',  name + '_', 'smoke_vseq',          '.svh'),
-                ('dv/env/seq_lib',  name + '_', 'common_vseq',         '.svh'),
-                ('dv/env/seq_lib',  name + '_', 'vseq_list',           '.svh'),
+    env_srcs = [(f'dv/{seq_lib_location}/seq_lib',  name + '_', 'base_vseq',           '.svh'),
+                (f'dv/{seq_lib_location}/seq_lib',  name + '_', 'smoke_vseq',          '.svh'),
+                (f'dv/{seq_lib_location}/seq_lib',  name + '_', 'common_vseq',         '.svh'),
+                (f'dv/{seq_lib_location}/seq_lib',  name + '_', 'vseq_list',           '.svh'),
                 ('dv/sva',            name + '_', 'bind',                '.sv'),
                 ('dv/sva',            name + '_', 'sva',                 '.core'),
                 ('dv/tests',          name + '_', 'base_test',           '.svh'),
@@ -81,6 +81,8 @@ def gen_bench(name, has_ral, env_agents, root_dir, vendor, bazel_root=".", licen
         elif gen_bazel_file and src_suffix == "":
             tpl = Template(filename=str(files(templates) / "bazel" / ftpl))
             if 'tests' in ftpl:
+                if seq_lib_location != "tests":
+                    ftpl = ftpl.replace('tests', seq_lib_location)
                 file_name = "/".join(ftpl.split('-')[:-1] + ["BUILD"])
             else:
                 file_name = 'BUILD'
@@ -107,6 +109,7 @@ def gen_bench(name, has_ral, env_agents, root_dir, vendor, bazel_root=".", licen
                                is_cip=is_cip,
                                has_alerts=has_alerts,
                                has_interrupts=has_interrupts,
-                               num_edn=num_edn))
+                               num_edn=num_edn,
+                               seq_lib_location=seq_lib_location))
             except Exception as e:
                 log.error(e.text_error_template().render())
