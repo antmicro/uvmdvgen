@@ -52,7 +52,7 @@ def gen_bench(name, has_ral, env_agents, root_dir, vendor, bazel_root=".", licen
             # append string versions of the directory relative to the agent directory
             src_dirs.append(str('./' / Path(i[0]).relative_to("dv")))
     # Remove duplicates
-    src_dirs = set(src_dirs)
+    src_dirs = sorted(set(src_dirs))
 
     for tup in env_srcs:
         path_dir = root_dir + '/' + tup[0]

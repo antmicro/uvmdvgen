@@ -63,7 +63,7 @@ def gen_agent(name, has_separate_host_device_driver, root_dir, vendor,
             # append string versions of the directory relative to the agent directory
             dirs.append(str('./' / Path(i[0]).relative_to(agent_dir)))
     # Remove duplicates
-    dirs = set(dirs)
+    dirs = sorted(set(dirs))
 
     for tup in agent_srcs:
         path_dir = tup[0]

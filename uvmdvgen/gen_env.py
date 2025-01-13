@@ -47,7 +47,7 @@ def gen_env(name, has_ral, env_agents, root_dir, vendor, license_header=[],
             # append string versions of the directory relative to the agent directory
             dirs.append(str('./' / Path(i[0]).relative_to("dv/env")))
     # Remove duplicates
-    dirs = set(dirs)
+    dirs = sorted(set(dirs))
 
     for tup in env_srcs:
         path_dir = root_dir + '/' + tup[0]
