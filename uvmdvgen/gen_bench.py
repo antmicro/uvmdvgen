@@ -92,6 +92,8 @@ def gen_bench(name, has_ral, env_agents, root_dir, vendor, bazel_root=".", licen
 
         file_path = os.path.join(path_dir, file_name)
 
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+
         # create rendered file
         with open(file_path, 'w') as fout:
             try:
