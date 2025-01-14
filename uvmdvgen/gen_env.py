@@ -40,7 +40,7 @@ def gen_env(name, has_ral, env_agents, root_dir, vendor, license_header=[],
     for i in env_srcs[:-1]:
         # if the extension is a sv source, compute the full source path
         # relative to the root agent directory, where the dot-f will be generated
-        if i[3] == '.sv':
+        if i[3] in ['.sv', '.svh']:
             sv_files.append(str((Path(i[0]) / (i[1] + i[2] + i[3])).relative_to("dv/env")))
     for i in env_srcs:
         if i[3] in ['.sv', '.svh', '.f', '.core']:

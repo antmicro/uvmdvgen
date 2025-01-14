@@ -56,7 +56,7 @@ def gen_agent(name, has_separate_host_device_driver, root_dir, vendor,
     for i in agent_srcs[:-1]:
         # if the extension is a sv source or header, compute the full source path
         # relative to the root agent directory, where the dot-f will be generated
-        if i[3] == '.sv':
+        if i[3] in ['.sv', '.svh']:
             sv_files.append(str((Path(i[0]) / (i[1] + i[2] + i[3])).relative_to(agent_dir)))
     for i in agent_srcs:
         if i[3] in ['.sv', '.svh', '.f', '.core']:
