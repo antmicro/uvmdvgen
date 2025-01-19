@@ -1,5 +1,6 @@
-// Copyright lowRISC contributors (OpenTitan project).
-// Licensed under the Apache License, Version 2.0, see LICENSE for details.
+// Copyright (c) 2019-2024 lowRISC <lowrisc.org>
+// Copyright (c) 2024-2025 Antmicro <www.antmicro.com>
+//
 // SPDX-License-Identifier: Apache-2.0
 
 class dv_base_env #(type CFG_T               = dv_base_env_cfg,
