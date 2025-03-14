@@ -23,7 +23,7 @@ use_repo(llvm, "llvm_toolchain", "llvm_toolchain_llvm")
 
 register_toolchains("@llvm_toolchain//:all")
 
-http_archive = use_repo_rule("@bazel_tools//:http.bzl", "http_archive")
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # HDL Rules
 rules_hdl_git_hash = "6e9ba43877e5077a251417d01927d1ad9b4a5392"
