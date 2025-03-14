@@ -7,6 +7,7 @@ package(
 
 buildifier(
     name = "buildifier",
+    add_tables = "//:buildifier_cfg.json",
     exclude_patterns = [
         "./.git/*",
     ],

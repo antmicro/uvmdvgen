@@ -1,0 +1,7 @@
+{
+	"SortableDenylist": {
+		"verilog_library.srcs": true,
+		"verilog_library.hdrs": true,
+		"verilog_library.deps": true
+	}
+}
