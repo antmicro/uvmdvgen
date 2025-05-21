@@ -51,13 +51,6 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
   rand uint clk_freq_mhz;
   rand uint clk_freqs_mhz[string];
 
-  constraint clk_freq_mhz_c {
-    `DV_COMMON_CLK_CONSTRAINT(clk_freq_mhz)
-    foreach (clk_freqs_mhz[i]) {
-      `DV_COMMON_CLK_CONSTRAINT(clk_freqs_mhz[i])
-    }
-  }
-
   `uvm_object_param_utils_begin(dv_base_env_cfg #(RAL_T))
     `uvm_field_int   (is_active,   UVM_DEFAULT)
     `uvm_field_int   (en_scb,      UVM_DEFAULT)
