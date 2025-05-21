@@ -71,6 +71,9 @@ class dv_base_test #(type CFG_T = dv_base_env_cfg,
 
   virtual task run_phase(uvm_phase phase);
     void'($value$plusargs("drain_time_ns=%0d", drain_time_ns));
+    if (drain_time_ns >= test_timeout_ns) begin
+      `uvm_warning(`gfn, $sformatf("Drain time (%0dns) is not lower than timeout (%0dns)", drain_time_ns, test_timeout_ns))
+    end
     phase.phase_done.set_drain_time(this, (drain_time_ns * 1ns));
     void'($value$plusargs("poll_for_stop=%0b", poll_for_stop));
     void'($value$plusargs("poll_for_stop_interval_ns=%0d", poll_for_stop_interval_ns));
