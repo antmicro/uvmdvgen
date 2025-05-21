@@ -3,8 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import uvm_pkg::*;
-
 // Standardize look & feel of report phase and uvm logging messages.
 class dv_report_server extends uvm_default_report_server;
 

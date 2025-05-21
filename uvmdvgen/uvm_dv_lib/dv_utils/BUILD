@@ -5,13 +5,13 @@ verilog_library(
     srcs = [
         "dv_test_status_pkg.sv",
         "dv_utils_pkg.sv",
-        "dv_report_server.sv",
-        "dv_vif_wrap.sv",
-        "dv_report_catcher.sv",
     ],
     hdrs = [
         "dv_macros.svh",
         "dv_fcov_macros.svh",
+        "dv_report_server.svh",
+        "dv_report_catcher.svh",
+        "dv_vif_wrap.svh",
     ],
     visibility = ["//visibility:public"],
 )

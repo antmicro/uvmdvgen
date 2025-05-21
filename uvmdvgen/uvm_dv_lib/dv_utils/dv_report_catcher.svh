@@ -4,8 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Report catcher/demoter
 
-import uvm_pkg::*;
-
 class dv_report_catcher extends uvm_report_catcher;
 
   // Stores a new severity indexed by the ID and

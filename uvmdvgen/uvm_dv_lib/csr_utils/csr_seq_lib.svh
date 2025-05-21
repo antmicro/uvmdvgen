@@ -21,11 +21,6 @@
 //
 // Exclusions are to be provided using the csr_excl_item item (see class for more details).
 
-import uvm_pkg::*;
-import dv_utils_pkg::*;
-import dv_base_reg_pkg::*;
-import csr_utils_pkg::*;
-
 class csr_base_seq extends uvm_reg_sequence #(uvm_sequence #(uvm_reg_item));
   `uvm_object_utils(csr_base_seq)
 
