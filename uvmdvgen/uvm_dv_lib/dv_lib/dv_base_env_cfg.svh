@@ -41,14 +41,12 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
   //   virtual function void initialize(bit [TL_AW-1:0] csr_base_addr = '1);
   //     ral_model_names.push_back("ral1");
   //     super.initialize(csr_base_addr);
-  string ral_model_names[$] = {RAL_T::type_name};
+  string ral_model_names[$];
 
+  string clk_rst_names[$];
   // clk_rst_if & freq
-  // clk_rst_vif and clk_freq_mhz are used for default clk/rst. If more than one RAL, the other
-  // clk_rst_vif and clk_freq_mhz can be found from the associative arrays
-  virtual clk_rst_if  clk_rst_vif;
+  // clk_rst_vif and corresponding clk_freq_mhz can be found from the associative arrays
   virtual clk_rst_if  clk_rst_vifs[string];
-  rand uint clk_freq_mhz;
   rand uint clk_freqs_mhz[string];
 
   `uvm_object_param_utils_begin(dv_base_env_cfg #(RAL_T))
@@ -64,13 +62,6 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
     `DV_CHECK_FATAL(is_initialized, "Please invoke initialize() before randomizing this object.")
   endfunction
 
-  function void post_randomize();
-    if (clk_freqs_mhz.size > 0) begin
-      `DV_CHECK_FATAL(clk_freqs_mhz.exists(RAL_T::type_name))
-      clk_freqs_mhz[RAL_T::type_name] = clk_freq_mhz;
-    end
-  endfunction
-
   virtual function void initialize(bit [bus_params_pkg::BUS_AW-1:0] csr_base_addr = '1);
     is_initialized = 1'b1;
 
@@ -78,8 +69,8 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
     create_ral_models(csr_base_addr);
 
     // add items to clk_freqs_mhz before randomizing it
-    foreach (ral_model_names[i]) begin
-      clk_freqs_mhz[ral_model_names[i]] = 0;
+    foreach (clk_rst_names[i]) begin
+      clk_freqs_mhz[clk_rst_names[i]] = 0;
     end
   endfunction
 

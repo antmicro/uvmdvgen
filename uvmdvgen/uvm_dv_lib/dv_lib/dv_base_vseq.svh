@@ -89,21 +89,20 @@ class dv_base_vseq #(type RAL_T               = dv_base_reg_block,
 
   virtual task apply_reset(string kind = "HARD");
     if (kind == "HARD") begin
-      if (cfg.clk_rst_vifs.size() > 0) begin
-        fork
-          begin : isolation_fork
-            foreach (cfg.clk_rst_vifs[i]) begin
-              automatic string ral_name = i;
-              fork
-                cfg.clk_rst_vifs[ral_name].apply_reset();
-              join_none
-            end
-            wait fork;
-          end : isolation_fork
-        join
-      end else begin // no ral model and only has default clk_rst_vif
-        cfg.clk_rst_vif.apply_reset();
-      end
+      fork
+        begin : isolation_fork
+          foreach (cfg.clk_rst_vifs[i]) begin
+            automatic string if_name = i;
+            fork
+              begin
+                cfg.clk_rst_vifs[if_name].apply_reset();
+                `uvm_info(`gfn, $sformatf("Reset on %s applied", if_name), UVM_MEDIUM)
+              end
+            join_none
+          end
+          wait fork;
+        end : isolation_fork
+      join
     end // if (kind == "HARD")
   endtask
 
@@ -126,12 +125,8 @@ class dv_base_vseq #(type RAL_T               = dv_base_reg_block,
 
     // Calculate the slowest clock that we see with a RAL model or fall back to the default
     // clk_rst_if if there is no RAL model.
-    if (cfg.clk_rst_vifs.size() > 0) begin
-      foreach (cfg.clk_rst_vifs[i]) begin
-        slowest_clk_period_ps = max2(slowest_clk_period_ps, cfg.clk_rst_vifs[i].clk_period_ps);
-      end
-    end else begin
-      slowest_clk_period_ps = cfg.clk_rst_vif.clk_period_ps;
+    foreach (cfg.clk_rst_vifs[i]) begin
+      slowest_clk_period_ps = max2(slowest_clk_period_ps, cfg.clk_rst_vifs[i].clk_period_ps);
     end
 
     // Pick the reset duration by picking a random number of (slowest) clock cycles, taking at least
@@ -141,15 +136,9 @@ class dv_base_vseq #(type RAL_T               = dv_base_reg_block,
 
     // Now apply the reset by driving any reset pins to zero, waiting a while, and then driving the
     // back to one.
-    if (cfg.clk_rst_vifs.size() > 0) begin
-      foreach (cfg.clk_rst_vifs[i]) cfg.clk_rst_vifs[i].drive_rst_pin(0);
-      #(reset_duration_ps * 1ps);
-      foreach (cfg.clk_rst_vifs[i]) cfg.clk_rst_vifs[i].drive_rst_pin(1);
-    end else begin
-      cfg.clk_rst_vif.drive_rst_pin(0);
-      #(reset_duration_ps * 1ps);
-      cfg.clk_rst_vif.drive_rst_pin(1);
-    end
+    foreach (cfg.clk_rst_vifs[i]) cfg.clk_rst_vifs[i].drive_rst_pin(0);
+    #(reset_duration_ps * 1ps);
+    foreach (cfg.clk_rst_vifs[i]) cfg.clk_rst_vifs[i].drive_rst_pin(1);
   endtask
 
   // This is called after apply_reset in this class.
@@ -159,14 +148,27 @@ class dv_base_vseq #(type RAL_T               = dv_base_reg_block,
   virtual task wait_for_reset(string reset_kind     = "HARD",
                               bit wait_for_assert   = 1,
                               bit wait_for_deassert = 1);
-    if (wait_for_assert) begin
-      `uvm_info(`gfn, "waiting for rst_n assertion...", UVM_MEDIUM)
-      @(negedge cfg.clk_rst_vif.rst_n);
-    end
-    if (wait_for_deassert) begin
-      `uvm_info(`gfn, "waiting for rst_n de-assertion...", UVM_MEDIUM)
-      @(posedge cfg.clk_rst_vif.rst_n);
-    end
+
+      fork
+        begin : isolation_fork
+          foreach (cfg.clk_rst_vifs[i]) begin
+            automatic string if_name = i;
+            fork
+              begin
+                if (wait_for_assert) begin
+                  `uvm_info(`gfn, $sformatf("waiting for rst_n de-assertion on %s...", if_name), UVM_MEDIUM)
+                  @(negedge cfg.clk_rst_vifs[if_name].rst_n);
+                end
+                if (wait_for_deassert) begin
+                  `uvm_info(`gfn, $sformatf("waiting for rst_n de-assertion on %s...", if_name), UVM_MEDIUM)
+                  @(posedge cfg.clk_rst_vifs[if_name].rst_n);
+                end
+              end
+            join_none
+          end
+          wait fork;
+        end : isolation_fork
+      join
     `uvm_info(`gfn, "wait_for_reset done", UVM_HIGH)
   endtask
 

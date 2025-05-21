@@ -31,20 +31,37 @@ class dv_base_scoreboard #(type RAL_T = dv_base_reg_block,
   endtask
 
   virtual task monitor_reset();
+    event reset_changed;
     forever begin
-      if (!cfg.clk_rst_vif.rst_n) begin
-        `uvm_info(`gfn, "reset occurred", UVM_HIGH)
+      bit any_asserted = 0;
+      bit all_deasserted = 1;
+      foreach(cfg.clk_rst_vifs[i]) begin
+        any_asserted |= !cfg.clk_rst_vifs[i].rst_n;
+        all_deasserted &= cfg.clk_rst_vifs[i].rst_n;
+      end
+
+      if(any_asserted && !under_reset) begin
+        `uvm_info(`gfn, "Detected a reset is asserted", UVM_HIGH)
         cfg.reset_asserted();
-        @(posedge cfg.clk_rst_vif.rst_n);
+      end else if(all_deasserted) begin
         reset();
         cfg.reset_deasserted();
         csr_utils_pkg::clear_outstanding_access();
-        `uvm_info(`gfn, "out of reset", UVM_HIGH)
+        `uvm_info(`gfn, "Detected all resets are deasserted", UVM_HIGH);
       end
-      else begin
-        // wait for a change to rst_n
-        @(cfg.clk_rst_vif.rst_n);
+
+      // Wait for a change to any rst_n
+      // It makes reseting of RAL asynchronous
+      foreach(cfg.clk_rst_vifs[i]) begin
+        string if_name = i;
+        fork
+          begin
+            @(cfg.clk_rst_vifs[if_name].rst_n);
+            ->> reset_changed;
+          end
+        join_none
       end
+      @(reset_changed);
     end
   endtask
 
