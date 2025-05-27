@@ -15,7 +15,6 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
 
   local bit will_reset  = 0;
   bit under_reset       = 0;
-  bit has_ral           = 0;
   bit is_initialized;        // Indicates that the initialize() method has been called.
 
   // JTAG DMI knob
@@ -47,7 +46,7 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
   //   virtual function void initialize(bit [TL_AW-1:0] csr_base_addr = '1);
   //     ral_model_names.push_back("ral1");
   //     super.initialize(csr_base_addr);
-  string ral_model_names[$];
+  string ral_model_names[$] = {RAL_T::type_name};
 
   // clk_rst_if & freq
   // clk_rst_vif and clk_freq_mhz are used for default clk/rst. If more than one RAL, the other
@@ -88,8 +87,6 @@ class dv_base_env_cfg #(type RAL_T = dv_base_reg_block) extends uvm_object;
     is_initialized = 1'b1;
 
     // build the ral model
-    if (has_ral)
-      ral_model_names.push_back({RAL_T::type_name});
     create_ral_models(csr_base_addr);
 
     // add items to clk_freqs_mhz before randomizing it
