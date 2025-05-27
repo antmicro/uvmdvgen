@@ -247,7 +247,9 @@ class dv_base_reg_field extends uvm_reg_field;
     string csr_name = this.get_parent().get_name();
     if (mubi_width > 0)     create_mubi_cov(mubi_width);
     if (regwen_fld != null) create_lockable_fld_cov();
-    if (!uvm_re_match("*_shadowed", csr_name)) create_shadowed_fld_cov();
+    // FIXME: Check if changed regex works as intended
+    // Previous "*_shadowed" throws an error "illegal preceding regex"
+    if (!uvm_re_match("shadowed", csr_name)) create_shadowed_fld_cov();
   endfunction
 
   // Returns true if this field can lock the specified register/field, else return false.
