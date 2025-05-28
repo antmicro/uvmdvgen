@@ -21,7 +21,7 @@ class dv_base_env #(type CFG_T               = dv_base_env_cfg,
     super.build_phase(phase);
     // get dv_base_env_cfg object from uvm_config_db
     if (!uvm_config_db#(CFG_T)::get(this, "", "cfg", cfg)) begin
-      `uvm_fatal(`gfn, $sformatf("failed to get %s from uvm_config_db", cfg.get_type_name()))
+      `uvm_fatal(`gfn, "failed to get cfg from uvm_config_db")
     end
 
     // get vifs for RAL models

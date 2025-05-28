@@ -26,7 +26,7 @@ class dv_base_agent #(type CFG_T            = dv_base_agent_cfg,
     super.build_phase(phase);
     // get CFG_T object from uvm_config_db
     if (!uvm_config_db#(CFG_T)::get(this, "", "cfg", cfg)) begin
-      `uvm_fatal(`gfn, $sformatf("failed to get %s from uvm_config_db", cfg.get_type_name()))
+      `uvm_fatal(`gfn, "failed to get cfg from uvm_config_db")
     end
     `uvm_info(`gfn, $sformatf("\n%0s", cfg.sprint()), UVM_HIGH)
 
