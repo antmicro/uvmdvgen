@@ -6,6 +6,8 @@ verilog_library(
         "prim_assert.svh",
         "prim_assert_sec_cm.svh",
         "prim_assert_standard_macros.svh",
+        "prim_assert_yosys_macros.svh",
+        "prim_assert_dummy_macros.svh",
         "prim_flop_macros.svh",
     ],
     visibility = ["//visibility:public"],
