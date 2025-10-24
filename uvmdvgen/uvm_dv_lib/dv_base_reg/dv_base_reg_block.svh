@@ -132,9 +132,9 @@ class dv_base_reg_block extends uvm_reg_block;
     // Create block-specific covergroups here.
   endfunction
 
-  function void get_dv_base_reg_blocks(ref dv_base_reg_block blks[$]);
+  function void get_dv_base_reg_blocks(ref dv_base_reg_block blks[$], input uvm_hier_e hier = UVM_HIER);
     uvm_reg_block uvm_blks[$];
-    this.get_blocks(uvm_blks);
+    this.get_blocks(uvm_blks, hier);
     foreach (uvm_blks[i]) `downcast(blks[i], uvm_blks[i])
   endfunction
 
