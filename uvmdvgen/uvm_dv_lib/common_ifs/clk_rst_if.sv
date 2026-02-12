@@ -102,6 +102,10 @@ interface clk_rst_if #(
   // If true, this is the only clock in the system; there is no need to add initial jitter.
   bit sole_clock = 1'b0;
 
+  // Configuration: make all clocks begin with known value at #0
+  // Turned off by default to preserve legacy behavior
+  bit begin_immediately = 1'b0;
+
   // use IfName as a part of msgs to indicate which clk_rst_vif instance
   string msg_id = $sformatf("[%m(clk_rst_if):%s]", IfName);
 
@@ -208,6 +212,10 @@ interface clk_rst_if #(
     sole_clock = is_sole;
   endfunction
 
+  function automatic void set_begin_immediately(bit do_begin_immediately = 1'b1);
+    begin_immediately = do_begin_immediately;
+  endfunction
+
   // start / ungate the clk
   task automatic start_clk(bit wait_for_posedge = 1'b0);
     clk_gate = 1'b0;
@@ -257,6 +265,10 @@ interface clk_rst_if #(
     o_rst_n = val;
   endtask
 
+  task automatic drive_clk_pin(logic val = 1'b0);
+    o_clk = val;
+  endtask
+
   // apply reset with specified scheme
   task automatic apply_reset(int reset_width_clks = $urandom_range(50, 100),
                              int post_reset_dly_clks  = 0,
@@ -299,6 +311,11 @@ interface clk_rst_if #(
     // with the "expected" timestamps.
     bit done;
     wait(set_active_called.triggered);
+    if (begin_immediately) begin
+        // Not waiting for reset signal, driving o_clk, o_rst_n immediately at #0
+        drive_rst_pin(1'b1);
+        drive_clk_pin(1'b0);
+    end
     if (drive_clk) begin
       fork
         begin
